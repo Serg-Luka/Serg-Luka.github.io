@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="image" property="og:image" content="https://i.imgur.com/UUMWZ2X.png">
+    <title>Sergey's Cybersecurity Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = jsonData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= jsonData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.8;
+            background-color: #f9fafb;
+        }
+        .markdown-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .markdown-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .markdown-content a {
+            color: #2563eb;
+            text-decoration: underline;
+            transition: color 0.2s ease;
+        }
+        .markdown-content a:hover {
+            color: #1e40af;
+        }
+        .markdown-content h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+        }
+        .markdown-content h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .markdown-content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #374151;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+        }
+        .markdown-content p, .markdown-content ul, .markdown-content li {
+            color: #4b5563;
+            margin-bottom: 1rem;
+        }
+        .markdown-content ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+        }
+        .markdown-content code {
+            background-color: #f3f4f6;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            color: #1f2937;
+        }
+        .markdown-content pre {
+            background-color: #1f2937;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .markdown-content pre code {
+            background-color: transparent;
+            padding: 0;
+            color: #f9fafb;
+        }
+        .section-divider {
+            border-top: 1px solid #e5e7eb;
+            margin: 2rem 0;
+        }
+        .badge-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: left;
+            align-items: center;
+        }
+        .badge-container img {
+            height: 28px;
+            margin: 0.5rem 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        th, td {
+            border: 1px solid #e5e7eb;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        th {
+            background-color: #f3f4f6;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        td a {
+            color: #2563eb;
+            text-decoration: underline;
+        }
+        td a:hover {
+            color: #1e40af;
+        }
+    </style>
+</head>
+<body>
+    <div class="markdown-content bg-white rounded-lg shadow-xl">
+        <img src="https://capsule-render.vercel.app/api?type=waving&height=200&color=100:899499,0:708090&text=Welcome%20to%20my%20Github&fontAlign=50&fontSize=35&fontAlignY=37&fontColor=FFFFFF&animation=twinkling" alt="Welcome to my GitHub">
+
+        <h2>Hello there, I'm Sergey!</h2>
+        <p>Connect with me.</p>
+        <div class="badge-container">
+            <a href="https://www.linkedin.com/in/serg-luka/">
+                <img src="https://img.shields.io/badge/LinkedIn-0072b1?&style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn Badge" />
+            </a>
+            <a href="mailto:serg_luka@outlook.com">
+                <img src="https://img.shields.io/badge/Email-0078D4?style=for-the-badge&logo=microsoft-outlook&logoColor=white" alt="Email Badge" />
+            </a>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <h2 id="overview">👨‍💻 Overview</h2>
+        <p>I am committed to advancing my career in cybersecurity and am actively seeking a role as a <strong>Cybersecurity Analyst</strong>. I have developed skills in <strong>threat detection</strong>, <strong>incident response</strong>, and <strong>system security</strong>, all of which are demonstrated in my project portfolio. I am eager to apply my knowledge in real-world environments and continue to grow and evolve in the dynamic field of cybersecurity.</p>
+
+        <div class="section-divider"></div>
+
+        <h2 id="tryhackme-profile">💻 My TryHackMe Profile</h2>
+        <p>Check out my progress and accomplishments on TryHackMe — ranked in the top 3%.</p>
+        <a href="https://tryhackme.com/p/SergLuka" target="_blank">
+            <img src="https://tryhackme-badges.s3.amazonaws.com/SergLuka.png?🍕=pizz6" alt="TryHackMe Badge" />
+        </a>
+
+        <div class="section-divider"></div>
+
+        <h2 id="cybersecurity-labs">🧰 Cybersecurity Labs</h2>
+        <p>My hands-on projects showcasing practical skills across multiple cybersecurity domains.</p>
+
+        <h3>Standalone Cybersecurity Labs</h3>
+        <p><em>Fundamental security skills: securing remote access, network traffic analysis, cloud monitoring, and application security.</em></p>
+        <table>
+            <tr>
+                <th>Focus Area</th>
+                <th>Project</th>
+            </tr>
+            <tr>
+                <td>SSH Hardening (Fail2Ban, UFW, KeyAuth, Tailscale)</td>
+                <td><a href="https://github.com/Serg-Luka/SSH-Hardening-Home-Lab">Enhancing SSH Security</a></td>
+            </tr>
+            <tr>
+                <td>Network Traffic Analysis (Wireshark)</td>
+                <td><a href="https://github.com/Serg-Luka/Analysing-Malicious-Traffic-with-Wireshark">Malicious Packet Analysis</a></td>
+            </tr>
+            <tr>
+                <td>Cloud Honeypot Monitoring (Azure Sentinel)</td>
+                <td><a href="https://github.com/Serg-Luka/SOC-and-Honeypot-in-Azure-Live-Traffic">Azure SOC Honeypot</a></td>
+            </tr>
+            <tr>
+                <td>Web Application Firewall Configuration</td>
+                <td><a href="https://github.com/Serg-Luka/Web-Application-Firewall-SafeLine-WAF-Lab">SafeLine WAF on DVWA</a></td>
+            </tr>
+            <tr>
+                <td>APT & Cyber Kill Chain Investigation (Splunk)</td>
+                <td><a href="https://github.com/Serg-Luka/Splunk-APT-Investigation">APT Investigation</a></td>
+            </tr>
+        </table>
+
+        <h3>Incident Response Labs</h3>
+        <p><em>Detecting and responding to credential attacks, malicious scripts, and anomalous user activity using Azure Sentinel.</em></p>
+        <table>
+            <tr>
+                <th>Focus Area</th>
+                <th>Project</th>
+            </tr>
+            <tr>
+                <td>Brute-Force & Credential Stuffing Detection</td>
+                <td><a href="https://github.com/Serg-Luka/Incident-Response-Brute-Force-Alert-Rule">Brute-Force Alert Rule</a></td>
+            </tr>
+            <tr>
+                <td>PowerShell Suspicious Activity</td>
+                <td><a href="https://github.com/Serg-Luka/PowerShell-Suspicious-Web-Request">PowerShell Suspicious Web Request</a></td>
+            </tr>
+            <tr>
+                <td>Impossible Travel Anomaly Detection</td>
+                <td><a href="https://github.com/Serg-Luka/Potential-Impossible-Travel-">Geo-Location Anomaly Detection</a></td>
+            </tr>
+        </table>
+
+        <h3>Threat Hunting Labs</h3>
+        <p><em>Advanced threat hunting using Microsoft Defender for Endpoint and Kusto Query Language (KQL).</em></p>
+        <table>
+            <tr>
+                <th>Focus Area</th>
+                <th>Project</th>
+            </tr>
+            <tr>
+                <td>Multi-Stage Attack Investigation</td>
+                <td><a href="https://github.com/Serg-Luka/Threat-Hunting-CTF">The Great Admin Heist CTF</a></td>
+            </tr>
+            <tr>
+                <td>Public-Facing IP & Brute-Force Detection</td>
+                <td><a href="https://github.com/Serg-Luka/threat-hunting-brute-force">Public Facing IP Detection</a></td>
+            </tr>
+            <tr>
+                <td>Internal Network Slowdown Investigation</td>
+                <td><a href="https://github.com/Serg-Luka/Sudden-Network-Slowdowns-Incident">Network Slowdowns Incident</a></td>
+            </tr>
+            <tr>
+                <td>Insider Threat & Data Exfiltration</td>
+                <td><a href="https://github.com/Serg-Luka/Threat-Hunting-Incident-Data-Exfiltration-Employee">Data Exfiltration by Employee</a></td>
+            </tr>
+        </table>
+
+        <h3>Vulnerability & Compliance Labs</h3>
+        <p><em>Scanning and remediating vulnerabilities and applying security baselines.</em></p>
+        <table>
+            <tr>
+                <th>Focus Area</th>
+                <th>Project</th>
+            </tr>
+            <tr>
+                <td>Vulnerability Scanning & Remediation (Tenable)</td>
+                <td><a href="https://github.com/Serg-Luka/Tenable-Nessus-Vulnerability-Scan-and-Remediation-in-Windows">Nessus Scan & Remediation</a></td>
+            </tr>
+            <tr>
+                <td>STIG Account & Authentication Hardening</td>
+                <td><a href="https://github.com/Serg-Luka/STIG-Account-Authentication-Hardening">Secure Authentication STIGs</a></td>
+            </tr>
+            <tr>
+                <td>STIG Audit Policy Configuration</td>
+                <td><a href="https://github.com/Serg-Luka/STIG-Audit-Policy-Configuration">Audit Policy Enforcement STIGs</a></td>
+            </tr>
+            <tr>
+                <td>STIG Disabling Insecure Features</td>
+                <td><a href="https://github.com/Serg-Luka/STIG-Disabling-Insecure-Features/">System Hardening STIGs</a></td>
+            </tr>
+        </table>
+
+        <h3>Google Cybersecurity Pro Labs</h3>
+        <p><em>Core cybersecurity principles and frameworks from Google’s Cybersecurity Professional training.</em></p>
+        <table>
+            <tr>
+                <th>Focus Area</th>
+                <th>Project</th>
+            </tr>
+            <tr>
+                <td>Risk Assessment & Security Audits</td>
+                <td><a href="https://github.com/Serg-Luka/Risk-Management-Lab/">Risk Management Lab</a></td>
+            </tr>
+            <tr>
+                <td>File Permissions & Access Controls</td>
+                <td><a href="https://github.com/Serg-Luka/Managing-Authorisation/">File Permissions Lab</a></td>
+            </tr>
+            <tr>
+                <td>SQL Injection Filters</td>
+                <td><a href="https://github.com/Serg-Luka/Applying-Filter-to-SQL-Queries/">SQL Filtering Lab</a></td>
+            </tr>
+            <tr>
+                <td>Vulnerability Assessment (NIST SP 800-30)</td>
+                <td><a href="https://github.com/Serg-Luka/Conducting-a-Vulnerability-Assessment/">Vulnerability Assessment Lab</a></td>
+            </tr>
+            <tr>
+                <td>Network Packet Capture Analysis</td>
+                <td><a href="https://github.com/Serg-Luka/Packet-Capture-Analysis/">Network Analysis Lab</a></td>
+            </tr>
+            <tr>
+                <td>Incident Handling Documentation</td>
+                <td><a href="https://github.com/Serg-Luka/Incident-Handler-Journal/">Incident Handler Journal</a></td>
+            </tr>
+            <tr>
+                <td>Threat Modelling (PASTA Framework)</td>
+                <td><a href="https://github.com/Serg-Luka/Identify-Security-Requirements-with-PASTA/tree/main">PASTA Worksheet</a></td>
+            </tr>
+        </table>
+
+        <div class="section-divider"></div>
+
+        <h2 id="tools">🛠️ Tools</h2>
+        <p>Here’s a look at the tools I’ve worked with and have experience using.</p>
+
+        <h3>Threat Intelligence</h3>
+        <div class="badge-container">
+            <img src="https://img.shields.io/badge/-OpenCTI-2A2A2B?&style=flatter-the-badge" alt="OpenCTI Badge" />
+            <img src="https://img.shields.io/badge/-MISP-D43A2D?&style=flatter-flat" alt="MISP Badge" />
+            <img src="https://img.shields.io/badge/-Cisco_Talos-0061F2?&style=flatter-flat&logo=Cisco&logoColor=white" alt="Cisco Talos Badge" />
+            <img src="https://img.shields.io/badge/-Abuse.CH-5C5C5C?&style=flatter-flat&logo=AbuseCH&logoColor=white" alt="Abuse.CH Badge" />
+            <img src="https://img.shields.io/badge/-MITRE_ATT%26CK-FF4F00?&style=flatter-flat&logo=MITRE&logoColor=white" alt="MITRE ATT&CK Badge" />
+        </div>
+
+        <h3>Network Analysis & Monitoring</h3>
+        <div class="badge-container">
+            <img src="https://img.shields.io/badge/-Wireshark-1679A7?&style=flatter-the-badge&logo=Wireshark&logoColor=white" alt="Wireshark Badge" />
+            <img src="https://img.shields.io/badge/-TShark-008CBA?&style=flatter-the-badge&logo=Wireshark&logoColor=white" alt="TShark Badge" />
+            <img src="https://img.shields.io/badge/-Zeek-9C27B0?&style=flatter-the-badge&logo=Zeek&logoColor=white" alt="Zeek Badge" />
+            <img src="https://img.shields.io/badge/-Brim-111111?&style=flatter-the-badge&logo=Brim&logoColor=white" alt="Brim Badge" />
+            <img src="https://img.shields.io/badge/-Suricata-EF3B2D?&style=flatter-the-badge&logo=Suricata&logoColor=white" alt="Suricata Badge" />
+            <img src="https://img.shields.io/badge/-Snort-F06A99?&style=flatter-the-badge&logo=Snort&logoColor=white" alt="Snort Badge" />
+            <img src="https://img.shields.io/badge/-Network_Miner-2E8B57?&style=flatter-the-badge&logo=Network_Miner&logoColor=white" alt="Network Miner Badge" />
+        </div>
+
+        <h3>Endpoint Monitoring & EDR</h3>
+        <div class="badge-container">
+            <img src="https://img.shields.io/badge/-Microsoft_Defender_for_Endpoint-00A4EF?&style=flatter-the-badge&logo=Microsoft&logoColor=white" alt="Microsoft Defender for Endpoint Badge" />
+            <img src="https://img.shields.io/badge/-Wazuh-800080?&style=flatter-the-badge&logo=Wazuh&logoColor=white" alt="Wazuh Badge" />
+            <img src="https://img.shields.io/badge/-Osquery-4A90E2?&style=flatter-the-badge&logo=Osquery&logoColor=white" alt="Osquery Badge" />
+            <img src="https://img.shields.io/badge/-Sysinternals-003366?&style=flatter-the-badge&logo=Windows&logoColor=white" alt="Sysinternals Badge" />
+            <img src="https://img.shields.io/badge/-Sysmon-0078D7?&style=flatter-flat-badge&logo=WindowsTerminal&logoColor=white" alt="Sysmon Badge" />
+        </div>
+
+        <h3>SIEM & Log Analysis</h3>
+        <div class="badge-container">
+            <img src="https://img.shields.io/badge/-Microsoft_Sentinel-0078D4?&style=flatter-the-badge&logo=Microsoft&logoColor=blue" alt="Microsoft Sentinel Badge" />
+            <img src="https://img.shields.io/badge/-Splunk-000000?&style=flatter-flat-badge&logo=Splunk&logoColor=white" alt="Splunk Badge" />
+        </div>
+
+        <h3>Vulnerability Management</h3>
+        <div class="badge-container">
+            <img src="https://img.shields.io/badge/-Tenable_Nessus-00C176?&style=flatter-the-badge&logo=Tenable&logoColor=white" alt="Tenable Nessus Badge" />
+        </div>
+
+        <h3>Email Threat Analysis</h3>
+        <div class="badge-container">
+            <img src="https://img.shields.io/badge/-PhishTool-FF5733?&style=flatter-the-badge&logo=PhishTool&logoColor=white" alt="PhishTool Badge" />
+        </div>
+
+        <h3>Malware & Forensics</h3>
+        <div class="badge-container">
+            <img src="https://img.shields.io/badge/-YARA-424242?&style=flatter-flat-badge" alt="YARA Badge" />
+            <img src="https://img.shields.io/badge/-Autopsy-00838F?&style=flatter-flat-badge&logo=Autopsy&logoColor=white" alt="Autopsy Badge" />
+            <img src="https://img.shields.io/badge/-Redline-B71C1C?&style=flatter-flat-badge&logo=RedHat&logoColor=white" alt="Redline Badge" />
+            <img src="https://img.shields.io/badge/-ANY.RUN-6A5ACD?&style=flatter-flat-badge&logo=WindowsTerminal&logoColor=white" alt="ANY.RUN Badge" />
+        </div>
+
+        <h3>Web & File Analysis</h3>
+        <div class="badge-container">
+            <img src="https://img.shields.io/badge/-VirusTotal-394EFF?&style=flatter-flat-badge&logo=VirusTotal&logoColor=white" alt="VirusTotal Badge" />
+            <img src="https://img.shields.io/badge/-URLscan-FF6600?&style=flatter-flat-badge&logo=URLscan&logoColor=white" alt="URLscan Badge" />
+        </div>
+
+        <h3>Platforms & Virtualisation</h3>
+        <div class="badge-container">
+            <img src="https://img.shields.io/badge/-Windows-0078D6?&style=flatter-flat-badge&logo=Windows&logoColor=white" alt="Windows Badge" />
+            <img src="https://img.shields.io/badge/-Linux-FCC624?&style=flatter-flat" alt="Linux Badge" alt="Linux Logo" />
+            <img src="https://img.shields.io/badge/-Microsoft_Azure-007FFF?&style=flatter-for-the-badge&logo=Microsoft-Azure&logoColor=white" alt="Microsoft Azure Badge" />
+            <img src="https://img.shields.io/badge/-VMware-607078?&style=flatter-flat-badge&logo=VMware&logoColor=white" alt="VMware Badge" />
+        </div>
+
+        <div class="section-divider"></div>
+
+        <h2 id="certifications">📑 Certifications</h2>
+        <p>A list of my certifications, which can be verified by clicking the associated button.</p>
+
+        <h3>Earned</h3>
+        <div class="badge-container">
+            <a href="https://www.credly.com/badges/ba872182-26ff-4769-afef-7ed7fb9c6806/" target="_blank" rel="noopener noreferrer">
+                <img src="https://img.shields.io/badge/CompTIA%20Security%2B-%23FF0000?style=for-the-badge&logo=comptia&logoColor=white" alt="CompTIA Security+ Badge" />
+            </a>
+            <a href="https://learn.microsoft.com/api/credentials/share/en-us/SergLuka/4B42C5CE36F5C632?sharingId=E759FF9A21D23D5D" target="_blank" rel="noopener noreferrer">
+                <img src="https://img.shields.io/badge/AZ--900:_Azure%20Fundamentals-blue?style=for-the-badge&logo=microsoft" alt="AZ-900: Azure Fundamentals Badge" />
+            </a>
+            <a href="https://www.credly.com/badges/0c748194-4c62-48ff-b84d-897930aa1bc7/" target="_blank" rel="noopener noreferrer">
+                <img src="https://img.shields.io/badge/ISC2%20Certified%20in%20Cybersecurity-00A79D?style=for-the-badge&logo=ISC2&logoColor=white" alt="ISC2 Certified in Cybersecurity Badge" />
+            </a>
+            <a href="https://www.credly.com/badges/f6e7de1d-c485-495a-961b-4479fb1612b8/linked_in_profile" target="_blank">
+                <img src="https://img.shields.io/badge/Google%20Cybersecurity%20Professional-white?style=for-the-badge&logo=google&logoColor=black" />
+            </a>
+            <a href="https://drive.google.com/file/d/1YDeRtapsw2WUk_J_h5H82cNto3bwPqAq/view" target="_blank">
+                <img src="https://img.shields.io/badge/-Cybersecurity%20Fundamentals-4CAF50?&style=for-the-badge&logo=palo-alto-networks&logoColor=white" />
+            </a>
+            <a href="https://arcx.io/verify-certificate?id=9748cdafc432ee474ca1f3f5127af0cb3128103a&k=71a9fc096b784eacb659a3e88a2dcfb0" target="_blank">
+                <img src="https://img.shields.io/badge/ArcX%20Cyber%20Threat%20Intelligence%20101-orange?style=for-the-badge&logo=search&logoColor=white" />
+            </a>
+            <a href="https://www.credly.com/badges/072381c4-38de-4d31-90ba-04623644b281" target="_blank" rel="noopener noreferrer">
+                <img src="https://img.shields.io/badge/CIISec%20Accredited%20Affiliate-%23005a9c?style=for-the-badge&logo=shield&logoColor=white" alt="CIISec Accredited Affiliate Badge" />
+            </a>
+        </div>
+
+        <h3>Expected</h3>
+        <div class="badge-container">
+            <a href="#" target="_blank">
+                <img src="https://img.shields.io/badge/CompTIA%20CySA%2B%20(Expected%20--%20July%202025)-FFFFFF?style=for-the-badge&logo=comptia&logoColor=red&labelColor=FFFFFF&color=FFFFFF" alt="CompTIA CySA+ (Expected - June 2025) Badge" />
+            </a>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <h2 id="formal-education">🎓 Formal Education</h2>
+        <p><strong>First-Class Honours Degree in Business Studies</strong><br>
+        <em>Nottingham Trent University</em></p>
+
+        <div class="section-divider"></div>
+
+        <h2 id="notable-soft-skills">🎯 Notable Soft Skills</h2>
+        <ul>
+            <li>Highly adaptable</li>
+            <li>Highly motivated self-learner</li>
+            <li>Strong written and verbal communication skills</li>
+            <li>Excellent problem-solving abilities</li>
+            <li>Solid presentation skills</li>
+            <li>Strong team player with a collaborative mindset</li>
+            <li>Inquisitive and committed to continuous learning</li>
+            <li>Solid business acumen</li>
+        </ul>
+
+        <div class="section-divider"></div>
+
+        <h2 id="helpful-resources">📌 Helpful Resources</h2>
+        <p><a href="https://github.com/Serg-Luka/Blue-Team-Links/">Blue Team Reference Links</a></p>
+    </div>
+</body>
+</html>
